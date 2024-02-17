@@ -1,10 +1,9 @@
-# streamlit_app.py
 import streamlit as st
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
-import plotly.express as px
+import matplotlib.pyplot as plt
 
 # Mengatur konfigurasi halaman SEBELUM segala hal lain
 st.set_page_config(page_title='Penyewaan Sepeda', layout='wide')
@@ -49,26 +48,43 @@ X_scaled = StandardScaler().fit_transform(X)
 kmeans = KMeans(n_clusters=n_clusters, random_state=42)
 df['cluster'] = kmeans.fit_predict(X_scaled)
 
-# Visualisasi Clustering dengan Plotly
-fig = px.scatter(df, x='temp', y='casual', color='cluster', title='Clustering Hasil Penyewaan Sepeda', template='plotly_white')
-st.plotly_chart(fig)
+# Visualisasi Clustering dengan Matplotlib
+fig, ax = plt.subplots()
+for cluster in df['cluster'].unique():
+    ax.scatter(df[df['cluster'] == cluster]['temp'], df[df['cluster'] == cluster]['casual'], label=f'Cluster {cluster}')
+ax.set_title('Clustering Hasil Penyewaan Sepeda')
+ax.set_xlabel('Temp')
+ax.set_ylabel('Casual')
+st.pyplot(fig)
 
 # PCA Visualisasi
 pca = PCA(n_components=2)
 components = pca.fit_transform(X_scaled)
-fig_pca = px.scatter(components, x=0, y=1, color=df['cluster'], title='PCA: Visualisasi Data Multidimensi', template='plotly_white')
-fig_pca.update_layout(xaxis_title='PC1', yaxis_title='PC2')
-st.plotly_chart(fig_pca)
+fig, ax = plt.subplots()
+scatter = ax.scatter(components[:, 0], components[:, 1], c=df['cluster'])
+legend = ax.legend(*scatter.legend_elements(), title="Clusters")
+ax.add_artist(legend)
+ax.set_title('PCA: Visualisasi Data Multidimensi')
+ax.set_xlabel('PC1')
+ax.set_ylabel('PC2')
+st.pyplot(fig)
 
 # Korelasi Fitur
 if st.sidebar.checkbox('Tampilkan Heatmap Korelasi', False):
     corr_matrix = df[features + ['cnt']].corr()
-    fig_corr = px.imshow(corr_matrix, text_auto=True, aspect="auto", title='Heatmap Korelasi Fitur dengan Jumlah Penyewaan')
-    st.plotly_chart(fig_corr)
+    fig, ax = plt.subplots()
+    cax = ax.matshow(corr_matrix, cmap='coolwarm')
+    fig.colorbar(cax)
+    plt.xticks(range(len(corr_matrix.columns)), corr_matrix.columns, rotation=90)
+    plt.yticks(range(len(corr_matrix.columns)), corr_matrix.columns)
+    ax.set_title('Heatmap Korelasi Fitur dengan Jumlah Penyewaan')
+    st.pyplot(fig)
 
 # Rata-Rata Penyewaan Per Jam
 if st.sidebar.checkbox('Tampilkan Rata-Rata Penyewaan Per Jam', False):
-    fig_hourly = px.line(df.groupby('hr').mean().reset_index(), x='hr', y='cnt', title='Rata-Rata Penyewaan Sepeda Per Jam', template='plotly_white')
-    fig_hourly.update_xaxes(title_text='Jam')
-    fig_hourly.update_yaxes(title_text='Rata-Rata Penyewaan')
-    st.plotly_chart(fig_hourly)
+    fig, ax = plt.subplots()
+    df.groupby('hr').mean().reset_index().plot(x='hr', y='cnt', ax=ax, legend=None)
+    ax.set_title('Rata-Rata Penyewaan Sepeda Per Jam')
+    ax.set_xlabel('Jam')
+    ax.set_ylabel('Rata-Rata Penyewaan')
+    st.pyplot(fig)
