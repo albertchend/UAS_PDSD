@@ -10,6 +10,19 @@ st.set_page_config(page_title='Penyewaan Sepeda', layout='wide')
 
 # Menampilkan judul dan deskripsi aplikasi
 st.markdown("""
+# Nama Anggota Kelompok :
+- 1.10122386 - Raka Naufal Fauzan
+- 2. 10122471 - Dhimas Muhammad Fattah Arrumy
+- 3. 10122379 - Andhika Fachrul Mubarrok
+- 4. 10122382 - Albert Cendra Hernawan
+- 5. 10122371 - Yosia marpaung
+- 6. 10122355 - Achmad Karis wibowo
+# Informasi pekerjaan dari anggota :
+- 1. Albert Cendra Hernawan, Melakukan Analisis dataset,membuat python, menghububgkan file py ke Streamlit, mengupload ke github agar dapat dilihat public.
+- 2. Dhimas Muhammad Fattah Arrumy, membantu Albert Cendra Hernawan mengurus masalah pada saat mengupload ke github.
+- 3. Raka Naufal Fauzan dan Andhika Fachrul Mubarrok, membantu Albert Cendra Hernawan menganalisa dataset serta mengupload ke Streamlit
+- 4. Yosia marpaung dan Achmad Karis wibowo, membuat Code Jupyter setelah di analisis.
+
 # Analisis dan Visualisasi Clustering Penyewaan Sepeda
 
 Aplikasi ini dibuat untuk mengidentifikasi pola dalam data penyewaan sepeda dan mengelompokkan data berdasarkan karakteristik penyewaan menggunakan metode clustering.
